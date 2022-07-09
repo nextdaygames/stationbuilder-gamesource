@@ -13,6 +13,13 @@ function RadiationWave:initailize()
     self.isRunning = false
 end
 
+function RadiationWave.matchingGroups()
+	return {
+        ["LivingEntities"] = { "Living", "-Iodine", "-LeadCovered" },
+        ["ComputerEntities"] = { "Machinery", "-RadiationProof" } 
+    }
+end
+
 function RadiationWave.isDisabled() 
     return false
 end
