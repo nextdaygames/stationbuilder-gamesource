@@ -49,7 +49,7 @@ function UseItemFaucet:instigatorInteractsWithObjectUsingTool(instigator, object
     local vendedComponents = {
         Components.SpawnAt:new(vendedItemSpawnLocation)
     }
-    interactionToolsProcessor:createItemByGuidWithComponents(itemGuid, vendedComponents)
+    interactionToolsProcessor:createItemByItemGuidWithComponents(itemGuid, vendedComponents)
 
     local instigatorName = instigator:getComponent("EntityName").entityName
 	local objectName = object:getComponent("EntityName").entityName

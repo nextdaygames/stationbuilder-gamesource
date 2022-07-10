@@ -51,12 +51,12 @@ function Vend:instigatorInteractsWithObject(instigator, object, interactionTools
     local vendedComponents = {
         Components.SpawnAt:new(vendedItemSpawnLocation)
     }
-    interactionToolsProcessor:createItemByGuidWithComponents(vendedItemGuid, vendedComponents)
+    interactionToolsProcessor:createItemByItemGuidWithComponents(vendedItemGuid, vendedComponents)
     
     objectVendingMachineComponent.itemsLeft -= 1
     objectVendingMachineComponent.currencyInsertedTotalValue = 0
 
-    local vendedItemInfo = interactionToolsProcessor:getItemByGuid(vendedItemGuid)
+    local vendedItemInfo = interactionToolsProcessor:getItemEntityForItemGuid(vendedItemGuid)
     local vendedItemName = vendedItemInfo:getComponent("EntityName").entityName
     ChatService:Chat(instigatorEntityContainer.entityContainer:WaitForChild("Head"), "Vends a " .. vendedItemName .. ".", Enum.ChatColor.Blue)
 

@@ -48,7 +48,7 @@ function SellItem:spawnCash(cash, spawnLocation, interactionToolsProcessor)
             dispensedCash += 1
         end
 
-        interactionToolsProcessor:createItemByGuidWithComponents(dispensedItem, {Components.SpawnAt:new(spawnLocation)})
+        interactionToolsProcessor:createItemByItemGuidWithComponents(dispensedItem, {Components.SpawnAt:new(spawnLocation)})
     end
 
 end

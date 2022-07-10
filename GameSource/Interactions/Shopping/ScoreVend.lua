@@ -49,9 +49,9 @@ function ScoreVend:instigatorInteractsWithObject(instigator, object, interaction
     local vendedComponents = {
         Components.SpawnAt:new(vendedItemSpawnLocation)
     }
-    interactionToolsProcessor:createItemByGuidWithComponents(vendedItemGuid, vendedComponents)
+    interactionToolsProcessor:createItemByItemGuidWithComponents(vendedItemGuid, vendedComponents)
 
-    local vendedItemInfo = interactionToolsProcessor:getItemByGuid(vendedItemGuid)
+    local vendedItemInfo = interactionToolsProcessor:getItemEntityForItemGuid(vendedItemGuid)
     local vendedItemName = vendedItemInfo:getComponent("EntityName").entityName
     ChatService:Chat(instigatorEntityContainer.entityContainer:WaitForChild("Head"), "Buys a " .. vendedItemName .. ".", Enum.ChatColor.Blue)
 

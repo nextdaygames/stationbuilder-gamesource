@@ -6,8 +6,8 @@ local class = Get("Lib/middleclass")
 local Event = Get("Lib/RoundEvents/Event")
 local RadiationWave = class("RadiationWave", Event)
 
-function RadiationWave:initialize()
-    Event.initialize(self)
+function RadiationWave:initialize(interactionToolsProcessor)
+    Event.initialize(self, interactionToolsProcessor)
     self.name = "RadiationWave"
     self.description = "Gives everyone radiation poisoning unless they have taken an iodine pill or are wearing lead."
 end
