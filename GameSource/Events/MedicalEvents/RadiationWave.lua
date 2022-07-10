@@ -6,17 +6,16 @@ local class = Get("Lib/middleclass")
 local Event = Get("Lib/RoundEvents/Event")
 local RadiationWave = class("RadiationWave", Event)
 
-function RadiationWave:initailize()
+function RadiationWave:initialize()
+    Event.initialize(self)
     self.name = "RadiationWave"
     self.description = "Gives everyone radiation poisoning unless they have taken an iodine pill or are wearing lead."
-
-    self.isRunning = false
 end
 
 function RadiationWave.matchingGroups()
 	return {
-        ["LivingEntities"] = { "Living", "-Iodine", "-LeadCovered" },
-        ["ComputerEntities"] = { "Machinery", "-RadiationProof" } 
+        ["ExposedOrganics"] = { "OrganicHealth", "-Iodine", "-LeadCovered" },
+        ["ExposedComputers"] = { "Machinery", "-RadiationProof" } 
     }
 end
 
@@ -66,6 +65,10 @@ end
 
 function RadiationWave:update(dt)
     Event.update(self, dt)
+
+    local numberExposedOrganics = table.getn(self.entityGroups["ExposedOrganics"])
+    local numberExposedComputers = table.getn(self.entityGroups["ExposedComputers"])
+    print(numberExposedOrganics, numberExposedComputers)
 end
 
 return RadiationWave
