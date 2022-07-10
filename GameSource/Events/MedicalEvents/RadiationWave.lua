@@ -2,6 +2,9 @@ local Utility = game.ReplicatedStorage:WaitForChild("Utility")
 local GetReplicatedStorage = require(Utility:WaitForChild("GetReplicatedStorage"))
 local Get = require(GetReplicatedStorage("Get", Utility))
 
+local Flatten = Get("Utility/FlattenDecendantsIntoDictonary")
+local Enums = Flatten({"Enums"})
+
 local class = Get("Lib/middleclass")
 local Event = Get("Lib/RoundEvents/Event")
 local RadiationWave = class("RadiationWave", Event)
@@ -16,6 +19,19 @@ function RadiationWave.matchingGroups()
 	return {
         ["ExposedOrganics"] = { "OrganicHealth", "-Iodine", "-LeadCovered" },
         ["ExposedComputers"] = { "Machinery", "-RadiationProof" } 
+    }
+end
+
+function RadiationWave.announcement()
+    return "A band of radiation is striking the station soon. Take iodine or wear lead to avoid harmful radiation."
+end
+
+function RadiationWave.lifeCycle()
+    return {
+        startDelayMinutes = 1,
+        announcmentDelayMinutes = 0,
+        durationAfterStartingMinutes = 1,
+        isAnnouncementEnabled = true
     }
 end
 
@@ -65,6 +81,10 @@ end
 
 function RadiationWave:update(dt)
     Event.update(self, dt)
+
+    if self.status == Enums.EventStatus.NOT_STARTED then
+        return
+    end
 
     local numberExposedOrganics = table.getn(self.entityGroups["ExposedOrganics"])
     local numberExposedComputers = table.getn(self.entityGroups["ExposedComputers"])
