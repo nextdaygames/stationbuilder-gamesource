@@ -48,6 +48,7 @@ function DamageCharacter:instigatorInteractsWithObjectUsingTool(instigator, obje
     if sharpTool ~= nil and objectWoundTracker ~= nil  then
         print("Added", toolName .. " Wound")
         table.insert(objectWoundTracker.wounds, { name = toolName .. " Wound", damage = damageComponent.damage})
+        self:createBloodDroplet(interactionToolsProcessor, object)
     end
 
     local objectOrganicHealth = object:getComponent("OrganicHealth")
@@ -90,6 +91,7 @@ function DamageCharacter:instigatorInteractsWithSelfUsingTool(instigator, tool, 
     if sharpTool ~= nil and instigatorWoundTracker ~= nil  then
         print("Added", toolName .. " Wound")
         table.insert(instigatorWoundTracker.wounds, { name = toolName .. " Wound", damage = damageComponent.damage})
+        self:createBloodDroplet(interactionToolsProcessor, instigator)
     end
 
     local instigatorOrganicHealth = instigator:getComponent("OrganicHealth")
@@ -102,6 +104,21 @@ function DamageCharacter:instigatorInteractsWithSelfUsingTool(instigator, tool, 
     end
 
 	return true
+end
+
+function DamageCharacter:createBloodDroplet(interactionToolsProcessor, person)
+    local personEntityContainerComponent = person:getComponent("EntityContainer")
+    local personBloodComponent = person:getComponent("Blood")
+
+    local spawnPosition = personEntityContainerComponent.entityContainer:WaitForChild("Head").Position
+
+    local components = {
+        Components.SpawnAt(spawnPosition),
+    }
+    if personBloodComponent ~= nil then
+        table.insert(components, Components.BloodDroplet(personBloodComponent.bloodType))
+    end
+    interactionToolsProcessor:createItemByItemGuidWithComponents("675471CE-F5BD-4F27-9207-696F44F30C05", components)
 end
 
 return DamageCharacter
