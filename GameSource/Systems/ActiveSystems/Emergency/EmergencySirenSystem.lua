@@ -52,10 +52,15 @@ function EmergencySirenSystem:update(dt)
             self.lastEmergencyRing = currentTime
             self:playSiren()
         end
-
         return
     end
-    print("Toggled to ", self.isEmergency)
+
+    -- -- Announce state
+    -- for _, loudSpeaker in pairs(self.entityGroups["LoudSpeakers"]) do
+    --     local instigatorEntityContainer = loudSpeaker:getComponent("EntityContainer")
+    --     local message = self.isEmergency and "An emergency has been declared." or "The emergency has been disbanded."
+    --     ChatService:Chat(instigatorEntityContainer.primaryPart, message, Enum.ChatColor.Blue) 
+    -- end
 
     -- Set all activators to match
     for _, entity in pairs(self.entityGroups["EmergencyActivators"]) do
@@ -67,7 +72,7 @@ function EmergencySirenSystem:update(dt)
         return
     end
     self.lastEmergencyRing = os.time()
-    self:playSiren()    
+    self:playSiren()       
 end
 
 return EmergencySirenSystem
