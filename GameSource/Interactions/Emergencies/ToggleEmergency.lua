@@ -16,15 +16,16 @@ function ToggleEmergency:init()
     self.name = "ToggleEmergency"
 end
 
-function ToggleEmergency:instigatorInteractsWithObjectMatches()
+function ToggleEmergency:instigatorInteractsWithObjectUsingToolMatches()
     return {
         instigatorMatches = {"Character", "PlayerControlled"},
         aiInstigatorRequires = { },
+		toolMatches = {"LeadershipId"},
         objectMatches = {"EmergencyActivator"},
     }
 end
 
-function ToggleEmergency:instigatorInteractsWithObject(instigator, object, interactionToolsProcessor)
+function ToggleEmergency:instigatorInteractsWithObjectUsingTool(instigator, object, tool, interactionToolsProcessor)
 	
     local instigatorEntityContainer = instigator:getComponent("EntityContainer")
     local messageSource = instigatorEntityContainer.entityContainer:WaitForChild("Head")
@@ -42,7 +43,7 @@ function ToggleEmergency:instigatorInteractsWithObject(instigator, object, inter
     emergencyActivatorComponent.isEmergency = not emergencyActivatorComponent.isEmergency
 
     local objectEntityContainerComponent = object:getComponent("EntityContainer")
-	Get("Utility/AudioFaker"):playSoundAssetAtLocation(9125626281, objectEntityContainerComponent.primaryPart.Position) -- Lever Mechanism Crank Clicks Big Metal Clunk (SFX)
+	Get("Utility/AudioFaker"):playSoundAssetAtLocation(9118779789, objectEntityContainerComponent.primaryPart.Position) -- Scan Sound
 
     local message = (emergencyActivatorComponent.isEmergency and "Activates" or "Deactivates") .. " the " .. objectName .. "."
     ChatService:Chat(messageSource, message, Enum.ChatColor.Blue)
