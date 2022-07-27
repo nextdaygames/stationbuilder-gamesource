@@ -23,7 +23,7 @@ function TakeOffClothing:instigatorInteractsWithObjectMatches()
     return {
         instigatorMatches = {"Character", "ClothingInventory"},
         aiInstigatorRequires = { },
-        objectMatches = {"Clothing", "Worn"},
+        objectMatches = {"Belt/Shirt/Hat/Mask/Backpack", "Worn"},
     }
 end
 
