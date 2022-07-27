@@ -4,47 +4,47 @@ local Get = require(GetReplicatedStorage("Get", Utility))
 
 local class = Get("Lib/middleclass")
 local ECS = Get("Lib/ECS")
-local OreBar = class("OreBar", ECS.Component)
+local Furnace = class("Furnace", ECS.Component)
 
 local Flatten = Get("Utility/FlattenDecendantsIntoDictonary")
 local Enums = Flatten({"Enums"})
 
-function OreBar:initialize() 
-	self.name = "OreBar"
+function Furnace:initialize() 
+	self.name = "Furnace"
 end
 
-function OreBar.category()
+function Furnace.category()
 	return Enums.ComponentCategory.Mining
 end
 
-function OreBar.displayName()
-	return "Ore Bar"
+function Furnace.displayName()
+	return "Furnace"
 end
 
-function OreBar.createFromParameters(params)
-	return OreBar:new()
+function Furnace.createFromParameters(params)
+	return Furnace:new()
 end
 
-function OreBar.requirements()
+function Furnace.requirements()
 	return {
 	}
 end
 
-function OreBar.defaults()
+function Furnace.defaults()
 	return {
 	}
 end
 
-function OreBar.tags()
+function Furnace.tags()
 	return {}
 end
 
-function OreBar.dependsOnComponents() 
-	return {}
+function Furnace.mutuallyExclusive() 
+	return {"TopLevelTool"}
 end
 
-function OreBar.desc()
-	return "The output of forged ore."
+function Furnace.desc()
+	return "Turns ore into ore bar."
 end
 
-return OreBar
+return Furnace

@@ -9,8 +9,13 @@ local Ore = class("Ore", ECS.Component)
 local Flatten = Get("Utility/FlattenDecendantsIntoDictonary")
 local Enums = Flatten({"Enums"})
 
-function Ore:initialize() 
+function Ore:initialize(oreBarItemGuid) 
 	self.name = "Ore"
+	
+	if oreBarItemGuid == nil then
+		error("nil oreBarItemGuid")
+	end
+	self.oreBarItemGuid = oreBarItemGuid
 end
 
 function Ore.category()
@@ -22,16 +27,18 @@ function Ore.displayName()
 end
 
 function Ore.createFromParameters(params)
-	return Ore:new()
+	return Ore:new(params["Ore Bar"])
 end
 
 function Ore.requirements()
 	return {
+		["Ore Bar"] = Enums.ValidEntryTypes.ItemGuid,
 	}
 end
 
 function Ore.defaults()
 	return {
+		["Ore Bar"] = "missing",
 	}
 end
 

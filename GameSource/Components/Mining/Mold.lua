@@ -9,8 +9,13 @@ local Mold = class("Mold", ECS.Component)
 local Flatten = Get("Utility/FlattenDecendantsIntoDictonary")
 local Enums = Flatten({"Enums"})
 
-function Mold:initialize() 
+function Mold:initialize(craftedItemGuid) 
 	self.name = "Mold"
+
+	if craftedItemGuid == nil then
+		error("nil craftedItemGuid")
+	end
+	self.craftedItemGuid = craftedItemGuid
 end
 
 function Mold.category()
@@ -22,16 +27,18 @@ function Mold.displayName()
 end
 
 function Mold.createFromParameters(params)
-	return Mold:new()
+	return Mold:new(params["Crafted Item"])
 end
 
 function Mold.requirements()
 	return {
+		["Crafted Item"] = Enums.ValidEntryTypes.ItemGuid,
 	}
 end
 
 function Mold.defaults()
 	return {
+		["Crafted Item"] = "missing",
 	}
 end
 
@@ -44,7 +51,7 @@ function Mold.dependsOnComponents()
 end
 
 function Mold.desc()
-	return "Tags this item as Mold so interactions listening for Mold interactions can pick it up."
+	return "Turns ore bar into an item."
 end
 
 return Mold
