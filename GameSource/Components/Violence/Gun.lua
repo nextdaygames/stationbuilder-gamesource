@@ -59,6 +59,9 @@ function Gun:initialize(burstCooldownMilliseconds, burstBulletStaggerMillisecond
 	self.durationMillisecondsForSpreadPeriod = 1*1000
 	self.sprayCalculationDistance = 20
 	self.currentSpraySpread = 0
+
+	self.displayedAmmo = clipSize
+	self.currentAmmo = clipSize
 	
 	self.burstBulletCooldowns = {}
 end
