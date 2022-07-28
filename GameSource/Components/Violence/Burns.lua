@@ -42,7 +42,7 @@ function Burns.dependsOnComponents()
 end
 
 function Burns.desc()
-	return "Can burn items or cauterize wounds."
+	return "Causes burn damage."
 end
 
 return Burns

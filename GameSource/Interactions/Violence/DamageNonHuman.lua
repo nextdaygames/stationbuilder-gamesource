@@ -15,25 +15,43 @@ local DamageNonHuman = class("DamageNonHuman", Interact)
 function DamageNonHuman:init()
     self.aiActionCost = 1
     self.name = "DamageNonHuman"
+    self.isDisabled = true
+end
+
+function DamageNonHuman:getDistance(here,there)
+    return math.sqrt(math.pow(there.x - here.x, 2) + math.pow(there.y - here.y, 2) + math.pow(there.z - here.z, 2))
 end
 
 function DamageNonHuman:instigatorInteractsWithObjectUsingToolMatches()
     return {
         instigatorMatches = {"Character"},
         aiInstigatorRequires = { "ViolentAI" },
-        objectMatches = {"Integrity"},
-		toolMatches = {"Damage"}
+        objectMatches = {"-Clothing", "Integrity"},
+		toolMatches = {"Damage", "-Gun"}
     }
 end
 
-function DamageNonHuman:damageNonHuman(damagingEntity, damagedEntity)
-	local damageComponent = damagingEntity:getComponent("Damage")
-	local integrityComponent = damagedEntity:getComponent("Integrity")
-	integrityComponent.currentIntegrity = math.max(0, integrityComponent.currentIntegrity - damageComponent.damage)
-end
-
 function DamageNonHuman:instigatorInteractsWithObjectUsingTool(instigator, object, tool, interactionToolsProcessor)
-    self:damageNonHuman(tool, object)
+    
+    -- Calculate distance falloff
+    local damageComponent = tool:getComponent("Damage")
+    local instigatorEntityContainer = instigator:getComponent("EntityContainer")
+    local toolEntityContainerComponent = tool:getComponent("EntityContainer")
+    local distance = self:getDistance(instigatorEntityContainer.primaryPart.Position, toolEntityContainerComponent.primaryPart.Position)
+    local minDistance = 5
+    local maxDistance = 30
+    local damage = damageComponent.damage
+    if distance >= maxDistance then
+        return false
+    end
+    if distance > minDistance then
+        local rangeDistance = distance - minDistance
+        local rangeMaxDistance = maxDistance - minDistance
+        damage = damage * (rangeDistance/rangeMaxDistance)
+    end
+
+    local integrityComponent = object:getComponent("Integrity")
+	integrityComponent.currentIntegrity = math.max(0, integrityComponent.currentIntegrity - damage)
 
 	local instigatorName = instigator:getComponent("EntityName").entityName
     local objectName = object:getComponent("EntityName").entityName
@@ -51,12 +69,15 @@ function DamageNonHuman:instigatorInteractsWithSelfUsingToolMatches()
     return {
         instigatorMatches = {"Integrity"},
         aiInstigatorRequires = { "ViolentAI" },
-		toolMatches = {"Damage"}
+		toolMatches = {"-Gun","Damage"}
     }
 end
 
 function DamageNonHuman:instigatorInteractsWithSelfUsingTool(instigator, tool, interactionToolsProcessor)
-    self:damageNonHuman(tool, instigator)
+    
+    local integrityComponent = instigator:getComponent("Integrity")
+    local damageComponent = tool:getComponent("Damage")
+	integrityComponent.currentIntegrity = math.max(0, integrityComponent.currentIntegrity - damageComponent.damage)
 
 	local instigatorName = instigator:getComponent("EntityName").entityName
     local toolName = tool:getComponent("EntityName").entityName

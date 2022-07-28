@@ -23,7 +23,7 @@ function PutOnClothing:instigatorInteractsWithObjectMatches()
     return {
         instigatorMatches = {"Character", "ClothingInventory"},
         aiInstigatorRequires = { },
-        objectMatches = {"Belt/Shirt/Hat/Mask/Backpack", "-Worn"},
+        objectMatches = {"Clothing", "-Worn"},
     }
 end
 
@@ -110,7 +110,7 @@ function PutOnClothing:instigatorInteractsWithObject(instigator, object, interac
 	end
 	weld.Part1 = objectEntityContainerComponent.entityContainer.PrimaryPart
 	weld.Parent = objectEntityContainerComponent.entityContainer
-	object:add(Components.Worn(instigator.id, weld))
+	object:add(Components.Worn(instigator, weld))
     
     return true
 end

@@ -9,13 +9,13 @@ local Worn = class("Worn", ECS.Component)
 local Flatten = Get("Utility/FlattenDecendantsIntoDictonary")
 local Enums = Flatten({"Enums"})
 
-function Worn:initialize(wornByEntityId, weldToCharacter)
+function Worn:initialize(wornByEntity, weldToCharacter)
 	self.name = "Worn"
 
-    if wornByEntityId == nil then
-        error("nil wornByEntityId")
+    if wornByEntity == nil then
+        error("nil wornByEntity")
     end
-    self.wornByEntityId = wornByEntityId
+    self.wornByEntity = wornByEntity
 
     if weldToCharacter == nil then
         error("nil weldToCharacter")

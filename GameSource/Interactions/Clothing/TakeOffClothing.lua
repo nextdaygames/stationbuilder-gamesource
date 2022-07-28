@@ -23,7 +23,7 @@ function TakeOffClothing:instigatorInteractsWithObjectMatches()
     return {
         instigatorMatches = {"Character", "ClothingInventory"},
         aiInstigatorRequires = { },
-        objectMatches = {"Belt/Shirt/Hat/Mask/Backpack", "Worn"},
+        objectMatches = {"Clothing", "Worn"},
     }
 end
 
@@ -51,13 +51,12 @@ function TakeOffClothing:instigatorInteractsWithObject(instigator, object, inter
 	end
 
     local objectWornComponent = object:getComponent("Worn")
-    if objectWornComponent.wornByEntityId ~= instigator.id then
+    if objectWornComponent.wornByEntity.id ~= instigator.id then
         return false
     end
 
     objectWornComponent.weldToCharacter.Parent = nil
     object:removeComponent("Worn")
-    
 
     local objectEntityContainerComponent = object:getComponent("EntityContainer")
     objectEntityContainerComponent.entityContainer.Parent = workspace

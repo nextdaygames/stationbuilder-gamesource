@@ -70,6 +70,10 @@ function DamageCharacter:instigatorInteractsWithSelfUsingToolMatches()
     }
 end
 
+function DamageCharacter:getDistance(here,there)
+    return math.sqrt(math.pow(there.x - here.x, 2) + math.pow(there.y - here.y, 2) + math.pow(there.z - here.z, 2))
+end
+
 function DamageCharacter:instigatorInteractsWithSelfUsingTool(instigator, tool, interactionToolsProcessor)
 
     local damageComponent = tool:getComponent("Damage")
@@ -81,22 +85,38 @@ function DamageCharacter:instigatorInteractsWithSelfUsingTool(instigator, tool, 
 	if humanoid == nil then
 		return false
 	end
-    humanoid:TakeDamage(damageComponent.damage)
-
+   
+    -- Calculate distance falloff
     local instigatorEntityContainer = instigator:getComponent("EntityContainer")
+    local toolEntityContainerComponent = tool:getComponent("EntityContainer")
+    local distance = self:getDistance(instigatorEntityContainer.primaryPart.Position, toolEntityContainerComponent.primaryPart.Position)
+    local minDistance = 5
+    local maxDistance = 30
+    local damage = damageComponent.damage
+    if distance >= maxDistance then
+        return false
+    end
+    if distance > minDistance then
+        local rangeDistance = distance - minDistance
+        local rangeMaxDistance = maxDistance - minDistance
+        damage = damage * (rangeDistance/rangeMaxDistance)
+    end
+
+    humanoid:TakeDamage(damage)
+
     local toolName = tool:getComponent("EntityName").entityName
 
     local sharpTool = tool:getComponent("Sharp")
     local instigatorWoundTracker = instigator:getComponent("WoundTracker")
     if sharpTool ~= nil and instigatorWoundTracker ~= nil  then
         print("Added", toolName .. " Wound")
-        table.insert(instigatorWoundTracker.wounds, { name = toolName .. " Wound", damage = damageComponent.damage})
+        table.insert(instigatorWoundTracker.wounds, { name = toolName .. " Wound", damage = damage})
         self:createBloodDroplet(interactionToolsProcessor, instigator)
     end
 
     local instigatorOrganicHealth = instigator:getComponent("OrganicHealth")
     if instigatorOrganicHealth ~= nil then
-        instigatorOrganicHealth.bruteDamage += damageComponent.damage
+        instigatorOrganicHealth.bruteDamage += damage
     end
     
     if not tool:getComponent("Gun") then
