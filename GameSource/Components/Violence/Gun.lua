@@ -10,7 +10,12 @@ local Flatten = Get("Utility/FlattenDecendantsIntoDictonary")
 local Enums = Flatten({"Enums"})
 
 
-function Gun:initialize(burstCooldownMilliseconds, burstBulletStaggerMilliseconds, burstBulletQuantity, clipSize, spreadCalculationDistance, spread, isContinuousFire) 
+function Gun:initialize(burstCooldownMilliseconds, burstBulletStaggerMilliseconds, burstBulletQuantity, 
+		clipSize, reloadDurationMilliseconds, 
+		spreadCalculationDistance, spread, 
+		isContinuousFire,
+		fireSoundAssetId, reloadSoundAssetId,
+		bulletColor) 
 	self.name = "Gun"
 
     if burstCooldownMilliseconds == nil then
@@ -33,6 +38,11 @@ function Gun:initialize(burstCooldownMilliseconds, burstBulletStaggerMillisecond
 	end
 	self.clipSize = clipSize
 
+	if reloadDurationMilliseconds == nil then
+		error("reloadDurationMilliseconds not initialized")
+	end
+	self.reloadDurationMilliseconds = reloadDurationMilliseconds
+
 	if spreadCalculationDistance == nil then
 		error("spreadCalculationDistance not initialized")
 	end
@@ -48,9 +58,25 @@ function Gun:initialize(burstCooldownMilliseconds, burstBulletStaggerMillisecond
 	end
 	self.isContinuousFire = string.upper(isContinuousFire) == "TRUE"
 
+	if fireSoundAssetId == nil then
+		error("fireSoundAssetId not initialized")
+	end
+	self.fireSoundAssetId = fireSoundAssetId
+
+	if reloadSoundAssetId == nil then
+		error("reloadSoundAssetId not initialized")
+	end
+	self.reloadSoundAssetId = reloadSoundAssetId
+
+	if bulletColor == nil then
+		error("bulletColor not initialized")
+	end
+	self.bulletColor = bulletColor
+
 	local currentTimeMilliseconds = DateTime.now().UnixTimestampMillis
 	self.lastBurstBegan = currentTimeMilliseconds
 	self.lastFire = currentTimeMilliseconds
+	self.lastReloadTime = currentTimeMilliseconds
 
 	self.isFiring = false
 	self.isFreshInput = true
@@ -77,9 +103,11 @@ end
 function Gun.createFromParameters(params)
 	return Gun:new(
         params["Burst Cooldown Milliseconds"], params["Burst Bullet Stagger Milliseconds"], params["Burst Bullet Quantity"],
-        params["Clip Size"],
+        params["Clip Size"], params["Reload Duration Millseconds"],
         params["Spread Calculation Distance"], params["Spread"],
-        params["Continuous Fire?"]
+        params["Continuous Fire?"],
+		params["Fire Sound Asset Id"], params["Reload Sound Asset Id"],
+		params["Bullet Color"]
     )
 end
 
@@ -89,9 +117,13 @@ function Gun.requirements()
         ["Burst Bullet Stagger Milliseconds"] = Enums.ValidEntryTypes.Float,
         ["Burst Bullet Quantity"] = Enums.ValidEntryTypes.Float,
         ["Clip Size"] = Enums.ValidEntryTypes.Float,
+        ["Reload Duration Millseconds"] = Enums.ValidEntryTypes.Float,
         ["Spread Calculation Distance"] = Enums.ValidEntryTypes.Float,
         ["Spread"] = Enums.ValidEntryTypes.Float,
         ["Continuous Fire?"] = Enums.ValidEntryTypes.SelectOneOption,
+		["Fire Sound Asset Id"] = Enums.ValidEntryTypes.Float,
+		["Reload Sound Asset Id"] = Enums.ValidEntryTypes.Float,
+		["Bullet Color"] = Enums.ValidEntryTypes.ColorPicker
 	}
 end
 
@@ -113,9 +145,13 @@ function Gun.defaults()
         ["Burst Bullet Stagger Milliseconds"] = 40,
         ["Burst Bullet Quantity"] = 3,
         ["Clip Size"] = 12,
+        ["Reload Duration Millseconds"] = 2000,
         ["Spread Calculation Distance"] = 20,
         ["Spread"] = 1,
         ["Continuous Fire?"] = "true",
+		["Fire Sound Asset Id"] = 1905367471,
+		["Reload Sound Asset Id"] = 6651329548,
+		["Bullet Color"] = Color3.fromRGB(150, 150, 150)
 	}
 end
 
